@@ -1,0 +1,7 @@
+index=main sourcetype="secure-2" ("Failed password" OR "Accepted password")
+| rex "from (?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| rex "for (?:invalid user )?(?<username>\S+)"
+| eval login_status=if(match(_raw,"Accepted password"), "Success"," Failed")
+| stats count(eval(login_status="Failed")) as failed_attempts count(eval(login_status="Success")) as successful_logins values(login_status) as login_status by src_ip username
+| where failed_attempts >=5 AND successful_logins > 0 
+| sort -failed_attempts
