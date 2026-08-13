@@ -1,0 +1,5 @@
+index=main sourcetype="secure-2" "Failed password"
+| rex "from (?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| rex "for (?:invalid user )?(?<username>\S+)"
+| stats count as failed_attempts by username src_ip
+| sort -failed_attempts
