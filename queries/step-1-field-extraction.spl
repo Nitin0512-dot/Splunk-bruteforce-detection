@@ -1,0 +1,4 @@
+index=main sourcetype="secure-2" "Failed password"
+| rex "from (?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| rex "for (?:invalid user )?(?<username>\S+)"
+| table _time username src_ip
